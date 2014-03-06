@@ -56,16 +56,22 @@ namespace GeneticsLab
 
             for (int i = 1; i <= m; i++)
             {
-                E[i, 0] = 5 * i;
-            }
-
-            for (int i = 1; i <= m; i++)
-            {
-                for (int j = 1; j <= n; j++)
+                for (int j = 0; j <= n; j++)
                 {
-                    var indels = Math.Min(E[i - 1, j] + 5, E[i, j - 1] + 5);
-                    var diff = (a[i - 1] == b[j - 1]) ? -3 : 1;
-                    E[i, j] = Math.Min(indels, E[i - 1, j - 1] + diff);
+                    var indels = E[i - 1, j] + 5;
+
+                    if (j == 0)
+                    {
+                        E[i, j] = indels;
+                    }
+                    else
+                    {
+                        indels = Math.Min(E[i, j - 1] + 5, indels);
+                        var diff = (a[i - 1] == b[j - 1]) ? -3 : 1;
+                        E[i, j] = Math.Min(indels, E[i - 1, j - 1] + diff);
+                    }
+
+
                 }
             }
 
