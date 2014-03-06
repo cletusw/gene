@@ -49,14 +49,14 @@ namespace GeneticsLab
             int n = Math.Min(b.Length, MaxCharactersToAlign);
             int[,] E = new int[MaxCharactersToAlign + 1, MaxCharactersToAlign + 1];
 
-            for (int i = 0; i <= m; i++)
-            {
-                E[i, 0] = 5 * i;
-            }
-
-            for (int j = 1; j <= n; j++)
+            for (int j = 0; j <= n; j++)
             {
                 E[0, j] = 5 * j;
+            }
+
+            for (int i = 1; i <= m; i++)
+            {
+                E[i, 0] = 5 * i;
             }
 
             for (int i = 1; i <= m; i++)
