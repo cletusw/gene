@@ -34,6 +34,7 @@ namespace GeneticsLab
             this.statusMessage = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.processButton = new System.Windows.Forms.ToolStripButton();
+            this.alignmentTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResults)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -43,15 +44,16 @@ namespace GeneticsLab
             // 
             this.dataGridViewResults.AllowUserToAddRows = false;
             this.dataGridViewResults.AllowUserToDeleteRows = false;
-            this.dataGridViewResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewResults.Location = new System.Drawing.Point(12, 28);
+            this.dataGridViewResults.Location = new System.Drawing.Point(12, 84);
             this.dataGridViewResults.Name = "dataGridViewResults";
             this.dataGridViewResults.ReadOnly = true;
-            this.dataGridViewResults.Size = new System.Drawing.Size(855, 463);
+            this.dataGridViewResults.Size = new System.Drawing.Size(855, 407);
             this.dataGridViewResults.TabIndex = 0;
+            this.dataGridViewResults.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewResults_CellMouseClick);
             // 
             // statusStrip1
             // 
@@ -85,15 +87,26 @@ namespace GeneticsLab
             this.processButton.Image = ((System.Drawing.Image)(resources.GetObject("processButton.Image")));
             this.processButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.processButton.Name = "processButton";
-            this.processButton.Size = new System.Drawing.Size(48, 22);
+            this.processButton.Size = new System.Drawing.Size(51, 22);
             this.processButton.Text = "Process";
             this.processButton.Click += new System.EventHandler(this.processButton_Click);
+            // 
+            // alignmentTextBox
+            // 
+            this.alignmentTextBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.alignmentTextBox.Location = new System.Drawing.Point(12, 28);
+            this.alignmentTextBox.Multiline = true;
+            this.alignmentTextBox.Name = "alignmentTextBox";
+            this.alignmentTextBox.ReadOnly = true;
+            this.alignmentTextBox.Size = new System.Drawing.Size(855, 50);
+            this.alignmentTextBox.TabIndex = 3;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(879, 516);
+            this.Controls.Add(this.alignmentTextBox);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dataGridViewResults);
@@ -117,6 +130,7 @@ namespace GeneticsLab
         private System.Windows.Forms.ToolStripStatusLabel statusMessage;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton processButton;
+        private System.Windows.Forms.TextBox alignmentTextBox;
     }
 }
 
