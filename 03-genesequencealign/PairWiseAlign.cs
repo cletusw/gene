@@ -22,12 +22,6 @@ namespace GeneticsLab
             NONE
         }
 
-        struct DpTableEntry
-        {
-            public int i;
-            public int j;
-        }
-
         /// <summary>
         /// this is the function you implement.
         /// </summary>
@@ -96,24 +90,24 @@ namespace GeneticsLab
             int m = Math.Min(a.Length, MaxCharactersToExtract);
             int n = Math.Min(b.Length, MaxCharactersToExtract);
             int[,] E = new int[MaxCharactersToExtract + 1, MaxCharactersToExtract + 1];
-            Dictionary<DpTableEntry, Direction> prev = new Dictionary<DpTableEntry, Direction>();
+            Dictionary<Tuple<int, int>, Direction> prev = new Dictionary<Tuple<int, int>, Direction>();
 
             // (0, 0) has 0 edit distance and no "previous" pointer
             E[0, 0] = 0;
-            prev.Add(new DpTableEntry { i = 0, j = 0 }, Direction.NONE);
+            prev.Add(Tuple.Create(0, 0), Direction.NONE);
 
             // Initialize first column with cost of indels
             for (int i = 1; i <= m; i++)
             {
                 E[i, 0] = 5 * i;
-                prev.Add(new DpTableEntry { i = i, j = 0 }, Direction.VERTICAL);
+                prev.Add(Tuple.Create(i, 0), Direction.VERTICAL);
             }
 
             // Initialize first row with cost of indels
             for (int j = 1; j <= n; j++)
             {
                 E[0, j] = 5 * j;
-                prev.Add(new DpTableEntry { i = 0, j = j }, Direction.HORIZONTAL);
+                prev.Add(Tuple.Create(0, j), Direction.HORIZONTAL);
             }
 
             for (int i = 1; i <= m; i++)
@@ -128,17 +122,17 @@ namespace GeneticsLab
                     if (diagonal <= vertical && diagonal <= horizontal)
                     {
                         E[i, j] = diagonal;
-                        prev.Add(new DpTableEntry { i = i, j = j }, Direction.DIAGONAL);
+                        prev.Add(Tuple.Create(i, j), Direction.DIAGONAL);
                     }
                     else if (vertical <= horizontal)
                     {
                         E[i, j] = vertical;
-                        prev.Add(new DpTableEntry { i = i, j = j }, Direction.VERTICAL);
+                        prev.Add(Tuple.Create(i, j), Direction.VERTICAL);
                     }
                     else
                     {
                         E[i, j] = horizontal;
-                        prev.Add(new DpTableEntry { i = i, j = j }, Direction.HORIZONTAL);
+                        prev.Add(Tuple.Create(i, j), Direction.HORIZONTAL);
                     }
                 }
             }
@@ -146,33 +140,33 @@ namespace GeneticsLab
             // Store the alignment by walking backward from the final entry using prev pointers
             StringBuilder alignmentA = new StringBuilder();
             StringBuilder alignmentB = new StringBuilder();
-            DpTableEntry current = new DpTableEntry { i = m, j = n };
+            var current = Tuple.Create(m, n);
             Direction next;
             while ((next = prev[current]) != Direction.NONE)
             {
                 if (next == Direction.DIAGONAL)
                 {
-                    current = new DpTableEntry { i = current.i - 1, j = current.j - 1 };
+                    current = Tuple.Create(current.Item1 - 1, current.Item2 - 1);
 
                     // Match or Substitution
-                    alignmentA.Append(a[current.i]);
-                    alignmentB.Append(b[current.j]);
+                    alignmentA.Append(a[current.Item1]);
+                    alignmentB.Append(b[current.Item2]);
                 }
                 else if (next == Direction.VERTICAL)
                 {
-                    current = new DpTableEntry { i = current.i - 1, j = current.j };
+                    current = Tuple.Create(current.Item1 - 1, current.Item2);
 
                     // Delete from a
-                    alignmentA.Append(a[current.i]);
+                    alignmentA.Append(a[current.Item1]);
                     alignmentB.Append('-');
                 }
                 else
                 {
-                    current = new DpTableEntry { i = current.i, j = current.j - 1 };
+                    current = Tuple.Create(current.Item1, current.Item2 - 1);
 
                     // Insert into b
                     alignmentA.Append('-');
-                    alignmentB.Append(b[current.j]);
+                    alignmentB.Append(b[current.Item2]);
                 }
             }
 
