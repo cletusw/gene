@@ -47,35 +47,37 @@ namespace GeneticsLab
             string b = sequenceB.Sequence;
             int m = Math.Min(a.Length, MaxCharactersToAlign);
             int n = Math.Min(b.Length, MaxCharactersToAlign);
-            int[,] E = new int[MaxCharactersToAlign + 1, MaxCharactersToAlign + 1];
+            int[][] E = new int[MaxCharactersToAlign + 1][];
+            E[0] = new int[MaxCharactersToAlign + 1];
 
             for (int j = 0; j <= n; j++)
             {
-                E[0, j] = 5 * j;
+                E[0][j] = 5 * j;
             }
 
             for (int i = 1; i <= m; i++)
             {
+                E[i] = new int[MaxCharactersToAlign + 1];
                 for (int j = 0; j <= n; j++)
                 {
-                    var indels = E[i - 1, j] + 5;
+                    var indels = E[i - 1][j] + 5;
 
                     if (j == 0)
                     {
-                        E[i, j] = indels;
+                        E[i][j] = indels;
                     }
                     else
                     {
-                        indels = Math.Min(E[i, j - 1] + 5, indels);
+                        indels = Math.Min(E[i][j - 1] + 5, indels);
                         var diff = (a[i - 1] == b[j - 1]) ? -3 : 1;
-                        E[i, j] = Math.Min(indels, E[i - 1, j - 1] + diff);
+                        E[i][j] = Math.Min(indels, E[i - 1][j - 1] + diff);
                     }
 
 
                 }
             }
 
-            return E[m, n];
+            return E[m][n];
         }
 
         public string[] Extract(GeneSequence sequenceA, GeneSequence sequenceB)
