@@ -51,6 +51,7 @@ namespace GeneticsLab
             E[0] = new int[MaxCharactersToAlign + 1];
             E[1] = new int[MaxCharactersToAlign + 1];
 
+            // Initialize first row with cost of indels
             for (int j = 0; j <= n; j++)
             {
                 E[0][j] = 5 * j;
@@ -67,20 +68,24 @@ namespace GeneticsLab
 
                     if (j == 0)
                     {
+                        // If first element, only have one option
                         E[active][j] = indels;
                     }
                     else
                     {
+                        // Get the minimum cost from the two available indels and the diagonal match/sub
                         indels = Math.Min(E[active][j - 1] + 5, indels);
                         var diff = (a[i - 1] == b[j - 1]) ? -3 : 1;
                         E[active][j] = Math.Min(indels, E[previous][j - 1] + diff);
                     }
                 }
 
+                // Swap active and previous (new active will get overwritten)
                 active = (active == 0) ? 1 : 0;
                 previous = (previous == 0) ? 1 : 0;
             }
 
+            // Return last element in last filled row
             return E[previous][n];
         }
 
@@ -97,12 +102,14 @@ namespace GeneticsLab
             E[0, 0] = 0;
             prev.Add(new DpTableEntry { i = 0, j = 0 }, Direction.NONE);
 
+            // Initialize first column with cost of indels
             for (int i = 1; i <= m; i++)
             {
                 E[i, 0] = 5 * i;
                 prev.Add(new DpTableEntry { i = i, j = 0 }, Direction.VERTICAL);
             }
 
+            // Initialize first row with cost of indels
             for (int j = 1; j <= n; j++)
             {
                 E[0, j] = 5 * j;
@@ -116,6 +123,8 @@ namespace GeneticsLab
                     var vertical = E[i - 1, j] + 5;
                     var horizontal = E[i, j - 1] + 5;
                     var diagonal = E[i - 1, j - 1] + ((a[i - 1] == b[j - 1]) ? -3 : 1);
+
+                    // Get the minimum cost from the two available indels and the diagonal match/sub
                     if (diagonal <= vertical && diagonal <= horizontal)
                     {
                         E[i, j] = diagonal;
@@ -134,6 +143,7 @@ namespace GeneticsLab
                 }
             }
 
+            // Store the alignment by walking backward from the final entry using prev pointers
             StringBuilder alignmentA = new StringBuilder();
             StringBuilder alignmentB = new StringBuilder();
             DpTableEntry current = new DpTableEntry { i = m, j = n };
@@ -143,18 +153,24 @@ namespace GeneticsLab
                 if (next == Direction.DIAGONAL)
                 {
                     current = new DpTableEntry { i = current.i - 1, j = current.j - 1 };
+
+                    // Match or Substitution
                     alignmentA.Append(a[current.i]);
                     alignmentB.Append(b[current.j]);
                 }
                 else if (next == Direction.VERTICAL)
                 {
                     current = new DpTableEntry { i = current.i - 1, j = current.j };
+
+                    // Delete from a
                     alignmentA.Append(a[current.i]);
                     alignmentB.Append('-');
                 }
                 else
                 {
                     current = new DpTableEntry { i = current.i, j = current.j - 1 };
+
+                    // Insert into b
                     alignmentA.Append('-');
                     alignmentB.Append(b[current.j]);
                 }
